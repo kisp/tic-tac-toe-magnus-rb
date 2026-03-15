@@ -22,7 +22,7 @@ class TestReset < Minitest::Test
   end
 
   def test_reset_sets_current_player_back_to_x
-    play(0, 1)                   # X then O
+    play(0)                      # X plays, leaving it O's turn
     @game.reset
     assert_equal "x", @game.current_player
   end
