@@ -1,4 +1,4 @@
-name: Nix build
+name: Nix
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [main, master]
 
 jobs:
-  nix-build:
+  nix-shell:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -18,5 +18,11 @@ jobs:
       - name: Install Nix
         uses: cachix/install-nix-action@v31
 
-      - name: nix-build
-        run: nix-build
+      - name: Install gems
+        run: nix-shell --pure --run "bundle install"
+
+      - name: Compile Rust extension
+        run: nix-shell --pure --run "bundle exec rake compile"
+
+      - name: Run tests
+        run: nix-shell --pure --run "bundle exec rake test"

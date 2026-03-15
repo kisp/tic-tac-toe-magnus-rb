@@ -29,7 +29,7 @@ let
     pkgs.libiconv        # required on macOS; harmless on Linux
   ];
 
-  # ── Bundle environment ─────────────────────────────────────────────────────
+  # ── Bundle environment (optional — requires gemset.nix) ───────────────────
   # `bundlerEnv` resolves Gemfile.lock into a closed set of Ruby gems.
   # Run `bundle lock` then `bundix` to regenerate gemset.nix:
   #
@@ -37,20 +37,24 @@ let
   #   bundix
   #
   # Commit both Gemfile.lock and gemset.nix — they are the Nix lockfiles.
-  gems = pkgs.bundlerEnv {
-    name              = "tic-tac-toe-magnus-rb-gems";
-    inherit ruby;
-    gemdir            = ./.;      # reads Gemfile + Gemfile.lock + gemset.nix
-    nativeBuildInputs = nativeDeps;
-  };
+  # When gemset.nix is absent (e.g. fresh clone), gems are managed by
+  # `bundle install` instead and bundlerEnv is omitted from the shell.
+  gems = if builtins.pathExists ./gemset.nix
+         then pkgs.bundlerEnv {
+           name              = "tic-tac-toe-magnus-rb-gems";
+           inherit ruby;
+           gemdir            = ./.;      # reads Gemfile + Gemfile.lock + gemset.nix
+           nativeBuildInputs = nativeDeps;
+         }
+         else null;
 
 in pkgs.mkShell {
   name = "tic-tac-toe-magnus-rb";
 
   buildInputs = [
     ruby
-    gems                # all Gemfile gems on PATH (rake, rake-compiler, …)
-  ] ++ nativeDeps ++ [
+  ] ++ (if gems != null then [ gems ] else [])  # Gemfile gems on PATH when available
+    ++ nativeDeps ++ [
     pkgs.bundix         # gems → gemset.nix helper
     pkgs.cargo-edit     # cargo add / rm / upgrade
     pkgs.cargo-watch    # cargo watch -x test
