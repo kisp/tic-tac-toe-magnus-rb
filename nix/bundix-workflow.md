@@ -50,7 +50,7 @@ gemset.nix       ← SHA-256 hashes for every gem; consumed by bundlerEnv
 ## Native extensions (rb_sys / rake-compiler)
 
 `bundlerEnv` passes `nativeBuildInputs` down to each gem that has a
-`Makefile`-style extension.  Because `rustup` is in that list,
+`Makefile`-style extension.  Because `cargo` is in that list,
 `rb_sys` can invoke `cargo build --release` during the gem install phase
 inside the Nix sandbox.
 

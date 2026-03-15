@@ -20,7 +20,8 @@ let
 
   # ── Native build inputs ────────────────────────────────────────────────────
   nativeDeps = [
-    pkgs.rustup
+    pkgs.rustc
+    pkgs.cargo
     pkgs.pkg-config
     pkgs.libiconv
   ];

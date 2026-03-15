@@ -18,7 +18,8 @@ let
 
   # ── Native build inputs shared by bundlerEnv & mkShell ────────────────────
   nativeDeps = [
-    pkgs.rustup          # manages stable / nightly Rust toolchains
+    pkgs.rustc           # stable Rust compiler from nixpkgs
+    pkgs.cargo           # Cargo build tool
     pkgs.pkg-config
     pkgs.libiconv        # required on macOS; harmless on Linux
     pkgs.clang           # provides libclang for rb-sys / bindgen
@@ -51,6 +52,9 @@ in pkgs.mkShell {
   ] ++ (if gems != null then [ gems ] else [])  # Gemfile gems on PATH when available
     ++ nativeDeps ++ [
     pkgs.bundix         # gems → gemset.nix helper
+    pkgs.clippy         # Rust linter
+    pkgs.rustfmt        # Rust formatter
+    pkgs.rust-analyzer  # Rust language server
     pkgs.cargo-edit     # cargo add / rm / upgrade
     pkgs.cargo-watch    # cargo watch -x test
   ];
@@ -59,11 +63,6 @@ in pkgs.mkShell {
   LIBCLANG_PATH = "${pkgs.llvmPackages.libclang.lib}/lib";
 
   shellHook = ''
-    # Install the stable Rust toolchain (downloaded once, cached by rustup).
-    rustup toolchain install stable \
-      --component rust-src rust-analyzer clippy rustfmt 2>/dev/null || true
-    rustup default stable
-
     # Point rb_sys at the correct Ruby so it finds ruby.h / libruby.
     export RUBY_ROOT="${ruby}"
     export RUBY_INCLUDE_DIR="${ruby}/include"
@@ -76,8 +75,8 @@ in pkgs.mkShell {
     echo "  🦀💎 tic-tac-toe-magnus-rb dev shell"
     echo ""
     echo "  Ruby   : $(ruby --version)"
-    echo "  Rust   : $(rustc --version 2>/dev/null || echo '(run: rustup toolchain install stable)')"
-    echo "  Cargo  : $(cargo --version 2>/dev/null || echo '(run: rustup toolchain install stable)')"
+    echo "  Rust   : $(rustc --version)"
+    echo "  Cargo  : $(cargo --version)"
     echo ""
     echo "  Quick start:"
     echo "    bundle exec rake compile   # build the Rust extension"

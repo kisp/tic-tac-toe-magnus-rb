@@ -67,7 +67,7 @@ shell.nix / default.nix
 │
 ├── shell.nix                  # `nix-shell`
 │   ├── ruby_3_3               # from nixpkgs
-│   ├── rustup                 # manages stable Rust toolchain
+│   ├── rustc / cargo          # stable Rust toolchain from nixpkgs
 │   ├── bundlerEnv             # all Gemfile gems, SHA-256 locked
 │   ├── bundix                 # gems → gemset.nix helper
 │   └── shellHook              # sets RUBY_ROOT, RUBYLIB, greets you
