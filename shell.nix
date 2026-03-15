@@ -27,6 +27,7 @@ let
     pkgs.rustup          # manages stable / nightly Rust toolchains
     pkgs.pkg-config
     pkgs.libiconv        # required on macOS; harmless on Linux
+    pkgs.clang           # provides libclang for rb-sys / bindgen
   ];
 
   # ── Bundle environment (optional — requires gemset.nix) ───────────────────
@@ -59,6 +60,9 @@ in pkgs.mkShell {
     pkgs.cargo-edit     # cargo add / rm / upgrade
     pkgs.cargo-watch    # cargo watch -x test
   ];
+
+  # rb-sys / bindgen need to locate libclang from the Nix store, not the system.
+  LIBCLANG_PATH = "${pkgs.llvmPackages.libclang.lib}/lib";
 
   shellHook = ''
     # Install the stable Rust toolchain (downloaded once, cached by rustup).
