@@ -12,11 +12,6 @@ jobs:
     permissions:
       contents: read
 
-    strategy:
-      fail-fast: false
-      matrix:
-        ruby-version: ["3.3", "3.4"]
-
     steps:
       - uses: actions/checkout@v4
 
@@ -36,18 +31,18 @@ jobs:
         id: gemfile
         run: echo "name=$(ls tic_tac_toe_magnus-*.gem)" >> $GITHUB_OUTPUT
 
-      - name: Install and test in fresh Docker container (ruby:${{ matrix.ruby-version }})
+      - name: Install and test in fresh Arch Linux Docker container
         run: |
           docker run --rm \
             -v "${{ github.workspace }}/${{ steps.gemfile.outputs.name }}:/tmp/${{ steps.gemfile.outputs.name }}" \
-            ruby:${{ matrix.ruby-version }} \
+            archlinux:latest \
             bash -c "
               set -e
+              echo '=== Installing Ruby, Rust and clang ==='
+              pacman -Sy --noconfirm ruby rust clang
+
               echo '=== Ruby version ==='
               ruby --version
-
-              echo '=== Installing libclang ==='
-              apt-get update -qq && apt-get install -y -qq libclang-dev
 
               echo '=== Installing gem with --user-install ==='
               gem install --user-install /tmp/${{ steps.gemfile.outputs.name }}
