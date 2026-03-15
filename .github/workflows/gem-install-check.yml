@@ -24,6 +24,9 @@ jobs:
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Print rb_sys version on host
+        run: gem list rb_sys
+
       - name: Build gem
         run: bundle exec gem build tic_tac_toe_magnus.gemspec
 
@@ -46,6 +49,9 @@ jobs:
 
               echo '=== Installing gem with --user-install ==='
               gem install --user-install /tmp/${{ steps.gemfile.outputs.name }}
+
+              echo '=== rb_sys version (inside container) ==='
+              gem list rb_sys
 
               echo '=== All installed .so files ==='
               find / -name '*.so' 2>/dev/null | grep tictactoe || echo 'none found'
