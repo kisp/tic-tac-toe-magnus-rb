@@ -2,7 +2,7 @@
 
 require_relative "tictactoe/version"
 # Load the compiled Rust extension (.so / .bundle)
-require_relative "tictactoe/tictactoe"
+require "tictactoe/tictactoe"
 
 module TicTacToe
   # TicTacToe::Game is defined in Rust (ext/tictactoe/src/lib.rs).
