@@ -100,14 +100,7 @@ irb(main):001> TicTacToe::Game.new
 irb(main):002> g = TicTacToe::Game.new
 =>
  · │ · │ ·
-───┼───┼───
- · │ · │ ·
-───┼───┼───
- · │ · │ ·
-
-  Current player : X
-  State          : playing
-  Valid moves    : 0, 1, 2, 3, 4, 5, 6, 7, 8
+...
 irb(main):003> g.current_player
 => "x"
 irb(main):004> g.valid_moves
