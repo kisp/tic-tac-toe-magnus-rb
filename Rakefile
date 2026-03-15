@@ -69,7 +69,9 @@ task :release, [:type] do |_, args|
   File.write(version_file, updated)
   puts "Bumped #{old_version} → #{new_version}"
 
+  sh "bundle lock"
   sh "git add #{version_file}"
+  sh "git add Gemfile.lock"
   sh %(git commit -m "Bump version to #{new_version}")
   sh %(git tag -a "v#{new_version}" -m "Release v#{new_version}")
 
