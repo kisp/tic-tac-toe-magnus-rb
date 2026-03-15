@@ -13,7 +13,24 @@ Exists mostly to practice Ruby + Rust gem packaging with Nix.
  · │ · │ X
 ```
 
----
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
+
+- [What's inside](#whats-inside)
+- [Getting started](#getting-started)
+  - [With Nix (recommended)](#with-nix-recommended)
+  - [Without Nix](#without-nix)
+- [Try it in the REPL](#try-it-in-the-repl)
+- [Nix architecture](#nix-architecture)
+  - [Vendoring Cargo dependencies](#vendoring-cargo-dependencies)
+  - [Gem pinning with bundix](#gem-pinning-with-bundix)
+- [Ruby API](#ruby-api)
+- [Project layout](#project-layout)
+- [How the Rust extension works](#how-the-rust-extension-works)
+- [Test suite](#test-suite)
+- [License](#license)
+
+<!-- markdown-toc end -->
 
 ## What's inside
 
