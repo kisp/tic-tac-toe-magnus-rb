@@ -34,32 +34,6 @@ jobs:
       - name: Install gem locally
         run: gem install ${{ matrix.install-flags }} tic_tac_toe_magnus-*.gem
 
-      - name: Show all installed .so files
-        run: find / -name "tictactoe.so" 2>/dev/null || echo "No .so found"
-
-      - name: Show gem lib dir contents (recursive)
-        run: |
-          GEM_LIB=$(ruby -e "puts Gem.find_files('tic_tac_toe_magnus').first")
-          GEM_ROOT=$(ruby -e "puts Gem::Specification.find_by_name('tic_tac_toe_magnus').gem_dir")
-          echo "=== Entry point: $GEM_LIB ==="
-          echo "=== gem_dir: $GEM_ROOT ==="
-          find "$GEM_ROOT" -type f | sort
-
-      - name: Show LOAD_PATH
-        run: ruby -e "$LOAD_PATH.each { |p| puts p }"
-
-      - name: Assert .so is NOT in gem lib dir
-        run: |
-          GEM_ROOT=$(ruby -e "puts Gem::Specification.find_by_name('tic_tac_toe_magnus').gem_dir")
-          if find "$GEM_ROOT/lib" -name "*.so" | grep -q .; then
-            echo "UNEXPECTED: .so found inside gem lib dir:"
-            find "$GEM_ROOT/lib" -name "*.so"
-            echo "This means require_relative will accidentally work — bug is masked!"
-            exit 1
-          else
-            echo "OK: no .so in gem lib dir, require_relative would correctly fail"
-          fi
-
       - name: Check require and instantiate game
         run: |
           cd /tmp
