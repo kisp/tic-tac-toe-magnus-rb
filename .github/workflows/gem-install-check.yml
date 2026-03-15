@@ -1,0 +1,40 @@
+name: Gem Install Check
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  gem-install-check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build gem
+        run: bundle exec gem build tic_tac_toe_magnus.gemspec
+
+      - name: Install gem locally
+        run: gem install tic_tac_toe_magnus-*.gem
+
+      - name: Check require and instantiate game
+        run: |
+          ruby -e "
+            require 'tic_tac_toe_magnus'
+            game = TicTacToe::Game.new
+            raise \"Expected TicTacToe::Game instance, got #{game.class}\" unless game.is_a?(TicTacToe::Game)
+            puts 'OK: required tic_tac_toe_magnus and instantiated TicTacToe::Game successfully'
+          "
