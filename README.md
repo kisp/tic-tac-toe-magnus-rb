@@ -2,6 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/tic_tac_toe_magnus.svg)](https://rubygems.org/gems/tic_tac_toe_magnus)
 [![CI](https://github.com/kisp/tic-tac-toe-magnus-rb/actions/workflows/ci.yml/badge.svg)](https://github.com/kisp/tic-tac-toe-magnus-rb/actions/workflows/ci.yml)
+[![Nix](https://github.com/kisp/tic-tac-toe-magnus-rb/actions/workflows/nix.yml/badge.svg)](https://github.com/kisp/tic-tac-toe-magnus-rb/actions/workflows/nix.yml)
 
 A Tic Tac Toe game engine with a **Rust core** and a clean **Ruby API**,
 packaged with **Nix**.
