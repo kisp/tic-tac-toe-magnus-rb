@@ -12,6 +12,11 @@ jobs:
     permissions:
       contents: read
 
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-version: ["3.3", "3.4"]
+
     steps:
       - uses: actions/checkout@v4
 
@@ -24,9 +29,6 @@ jobs:
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Print rb_sys version on host
-        run: gem list rb_sys
-
       - name: Build gem
         run: bundle exec gem build tic_tac_toe_magnus.gemspec
 
@@ -34,11 +36,11 @@ jobs:
         id: gemfile
         run: echo "name=$(ls tic_tac_toe_magnus-*.gem)" >> $GITHUB_OUTPUT
 
-      - name: Install and test in fresh Docker container
+      - name: Install and test in fresh Docker container (ruby:${{ matrix.ruby-version }})
         run: |
           docker run --rm \
             -v "${{ github.workspace }}/${{ steps.gemfile.outputs.name }}:/tmp/${{ steps.gemfile.outputs.name }}" \
-            ruby:3.3 \
+            ruby:${{ matrix.ruby-version }} \
             bash -c "
               set -e
               echo '=== Ruby version ==='
