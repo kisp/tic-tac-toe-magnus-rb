@@ -21,3 +21,8 @@ end
 task test: :compile
 
 task default: :test
+
+desc "Launch IRB with the gem loaded and ready to use"
+task irb: :compile do
+  exec "irb -I lib -r tictactoe"
+end
