@@ -8,7 +8,7 @@ build time.
 
 ```sh
 # 1. Enter the dev shell (this already has bundix on PATH)
-nix develop
+nix-shell
 
 # 2. Install gems and produce Gemfile.lock
 bundle install
@@ -23,7 +23,7 @@ git add Gemfile.lock gemset.nix
 ## Updating a gem
 
 ```sh
-nix develop
+nix-shell
 bundle update <gem_name>   # updates Gemfile.lock
 bundix                     # regenerates gemset.nix
 git add Gemfile.lock gemset.nix
@@ -42,7 +42,7 @@ Gemfile.lock     ← exact versions resolved by Bundler
     ▼
 gemset.nix       ← SHA-256 hashes for every gem; consumed by bundlerEnv
     │
-    │  nix develop / nix build
+    │  nix-shell / nix-build
     ▼
 /nix/store/...   ← immutable, content-addressed gem closures
 ```
@@ -50,7 +50,7 @@ gemset.nix       ← SHA-256 hashes for every gem; consumed by bundlerEnv
 ## Native extensions (rb_sys / rake-compiler)
 
 `bundlerEnv` passes `nativeBuildInputs` down to each gem that has a
-`Makefile`-style extension.  Because `rustToolchain` is in that list,
+`Makefile`-style extension.  Because `rustup` is in that list,
 `rb_sys` can invoke `cargo build --release` during the gem install phase
 inside the Nix sandbox.
 
@@ -63,5 +63,5 @@ graph must be vendored (see `nix/vendor-cargo-deps.nix`).
 |---------|-----|
 | `bundlerEnv` complains about missing `gemset.nix` | Run `bundix` and commit the result |
 | Cargo can't find crates | Vendor deps via Approach A/B/C in `vendor-cargo-deps.nix` |
-| Wrong Ruby version in shell | Change `ruby = pkgs.ruby_3_3` in `flake.nix` |
+| Wrong Ruby version in shell | Change `ruby = pkgs.ruby_3_3` in `shell.nix` |
 | `libruby` not found during ext compile | Ensure `RUBY_ROOT` is set (the `shellHook` does this) |

@@ -1,4 +1,4 @@
-# tic-tac-toe-magnus-rb 🦀💎❄️
+# tic-tac-toe-magnus-rb 🦀💎
 
 A Tic Tac Toe game engine with a **Rust core** and a clean **Ruby API**,
 packaged with **Nix**.
@@ -22,7 +22,7 @@ Exists mostly to practice Ruby + Rust gem packaging with Nix.
 | Game logic | **Rust** | Board state, move validation, win/draw detection, minimax AI |
 | Ruby bindings | **Magnus 0.7** | Zero-cost safe Rust ↔ Ruby bridge |
 | Gem extension | **rb\_sys + rake-compiler** | Drives `cargo build` from `extconf.rb` |
-| Dev shell | **Nix flake** | Reproducible Ruby + Rust toolchain, no version drift |
+| Dev shell | **Nix (classical)** | Reproducible Ruby + Rust toolchain, no version drift |
 | Gem deps | **bundlerEnv + bundix** | SHA-256-pinned Ruby gems inside the Nix sandbox |
 
 ---
@@ -32,10 +32,10 @@ Exists mostly to practice Ruby + Rust gem packaging with Nix.
 ### With Nix (recommended)
 
 ```sh
-git clone https://github.com/example/tic-tac-toe-magnus-rb
+git clone https://github.com/kisp/tic-tac-toe-magnus-rb
 cd tic-tac-toe-magnus-rb
 
-nix develop                    # enter the reproducible dev shell
+nix-shell                      # enter the reproducible dev shell
 bundle install                 # install Ruby gems
 bundix                         # pin gems → gemset.nix  (first time only)
 bundle exec rake compile       # build the Rust extension
@@ -63,33 +63,30 @@ bundle exec rake test
 ## Nix architecture
 
 ```
-flake.nix
+shell.nix / default.nix
 │
-├── devShells.default          # `nix develop`
+├── shell.nix                  # `nix-shell`
 │   ├── ruby_3_3               # from nixpkgs
-│   ├── rust-bin.stable.latest # from rust-overlay (pinned)
+│   ├── rustup                 # manages stable Rust toolchain
 │   ├── bundlerEnv             # all Gemfile gems, SHA-256 locked
 │   ├── bundix                 # gems → gemset.nix helper
 │   └── shellHook              # sets RUBY_ROOT, RUBYLIB, greets you
 │
-├── packages.default           # `nix build`
-│   └── mkDerivation           # compiles the Rust ext in the sandbox
-│                              # (requires vendored Cargo deps — see below)
-│
-└── apps.demo                  # `nix run .#demo`
-    └── runs examples/demo.rb
+└── default.nix                # `nix-build`
+    └── mkDerivation           # compiles the Rust ext in the sandbox
+                               # (requires vendored Cargo deps — see below)
 ```
 
 ### Vendoring Cargo dependencies
 
 The Nix sandbox has no network access, so Cargo crates must be vendored
-before `nix build` can compile the extension.  Three approaches are documented
+before `nix-build` can compile the extension.  Three approaches are documented
 in [`nix/vendor-cargo-deps.nix`](nix/vendor-cargo-deps.nix):
 
 | Approach | How |
 |----------|-----|
 | `importCargoLock` | Commit `Cargo.lock`; Nix fetches at eval time (easiest) |
-| `fetchCargoTarball` | Explicit SHA-256 hash in `flake.nix` |
+| `fetchCargoTarball` | Explicit SHA-256 hash in `default.nix` |
 | Committed vendor dir | `cargo vendor` + `[source.vendored-sources]` (fully offline) |
 
 ### Gem pinning with bundix
@@ -139,12 +136,12 @@ or moves after the game is over.
 
 ```
 tic-tac-toe-magnus-rb/
-├── flake.nix                  # Nix devShell + package derivation
-├── shell.nix                  # legacy nix-shell fallback
-├── .envrc                     # direnv → nix develop
+├── shell.nix                  # Nix dev shell (nix-shell)
+├── default.nix                # Nix package derivation (nix-build)
+├── .envrc                     # direnv → nix-shell
 ├── .gitignore
 ├── nix/
-│   ├── vendor-cargo-deps.nix  # how to vendor Cargo crates for nix build
+│   ├── vendor-cargo-deps.nix  # how to vendor Cargo crates for nix-build
 │   └── bundix-workflow.md     # gem pinning cookbook
 │
 ├── tic_tac_toe_magnus.gemspec
