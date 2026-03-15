@@ -1,13 +1,13 @@
 # nix/vendor-cargo-deps.nix
 #
-# Helper that vendors the Cargo dependency graph so `nix build` never hits
+# Helper that vendors the Cargo dependency graph so `nix-build` never hits
 # the network.  Two approaches are shown — pick one.
 #
 # ─────────────────────────────────────────────────────────────────────────────
 # APPROACH A — importCargoLock (recommended, no extra tooling needed)
 # ─────────────────────────────────────────────────────────────────────────────
 #
-#   In flake.nix, inside the mkDerivation for the package:
+#   In default.nix, inside the mkDerivation for the package:
 #
 #   cargoDeps = pkgs.rustPlatform.importCargoLock {
 #     lockFile = ../ext/tictactoe/Cargo.lock;
@@ -51,7 +51,7 @@
 #        directory = "vendor"
 #
 #   3. Commit the vendor/ directory.
-#      Nix build will now work fully offline — no fetchCargoTarball needed.
+#      nix-build will now work fully offline — no fetchCargoTarball needed.
 #
 # ─────────────────────────────────────────────────────────────────────────────
 # Which approach to use?
