@@ -26,6 +26,7 @@ Exists mostly to practice Ruby + Rust gem packaging with Nix.
   - [With Nix (recommended)](#with-nix-recommended)
   - [Without Nix](#without-nix)
 - [Try it in the REPL](#try-it-in-the-repl)
+- [Releasing a new version](#releasing-a-new-version)
 - [Nix architecture](#nix-architecture)
   - [Vendoring Cargo dependencies](#vendoring-cargo-dependencies)
   - [Gem pinning with bundix](#gem-pinning-with-bundix)
@@ -131,6 +132,26 @@ irb(main):006> g
   Valid moves    : 0, 1, 2, 4, 5, 6, 7, 8
 irb(main):007> exit
 ```
+
+---
+
+## Releasing a new version
+
+A single Rake task bumps the version, commits, tags, builds the gem, and
+prints the `gem push` command so you can review before publishing:
+
+```sh
+bundle exec rake release           # patch bump  (e.g. 0.1.0 → 0.1.1)
+bundle exec rake release[minor]    # minor bump  (e.g. 0.1.0 → 0.2.0)
+bundle exec rake release[major]    # major bump  (e.g. 0.1.0 → 1.0.0)
+```
+
+The task will:
+
+1. Increment the version in `lib/tictactoe/version.rb`.
+2. Create a git commit (`Bump version to X.Y.Z`) and an annotated tag (`vX.Y.Z`).
+3. Build the gem (`tic_tac_toe_magnus-X.Y.Z.gem`).
+4. Print the exact `gem push` command to publish it.
 
 ---
 
