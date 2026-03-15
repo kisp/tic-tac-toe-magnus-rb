@@ -12,6 +12,10 @@ jobs:
     permissions:
       contents: read
 
+    strategy:
+      matrix:
+        install-flags: ["", "--user-install"]
+
     steps:
       - uses: actions/checkout@v4
 
@@ -28,7 +32,7 @@ jobs:
         run: bundle exec gem build tic_tac_toe_magnus.gemspec
 
       - name: Install gem locally
-        run: gem install tic_tac_toe_magnus-*.gem
+        run: gem install ${{ matrix.install-flags }} tic_tac_toe_magnus-*.gem
 
       - name: Check require and instantiate game
         run: |
