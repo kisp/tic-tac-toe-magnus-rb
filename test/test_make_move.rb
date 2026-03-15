@@ -28,9 +28,10 @@ class TestMakeMove < Minitest::Test
 
   def test_players_alternate_for_all_nine_moves
     expected = %w[x o x o x o x o x]
-    expected.each_with_index do |player, pos|
+    moves    = [0, 1, 2, 5, 3, 6, 4, 8, 7]  # draw sequence – no early win
+    expected.zip(moves).each_with_index do |(player, pos), i|
       assert_equal player, @game.current_player,
-        "Expected #{player} at move #{pos + 1}"
+        "Expected #{player} at move #{i + 1}"
       @game.make_move(pos)
     end
   end
@@ -38,9 +39,10 @@ class TestMakeMove < Minitest::Test
   # ── Valid-moves shrinking ────────────────────────────────────────────────────
 
   def test_valid_moves_shrinks_by_one_after_each_move
+    moves = [0, 1, 2, 5, 3, 6, 4, 8, 7]  # draw sequence – no early win
     9.times do |i|
       assert_equal 9 - i, @game.valid_moves.size
-      @game.make_move(i)
+      @game.make_move(moves[i])
     end
   end
 

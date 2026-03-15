@@ -20,8 +20,8 @@ class TestIntegration < Minitest::Test
 
   def test_o_wins_via_human_move_sequence
     g = TicTacToe::Game.new
-    # O: 0,1,2 (top row), X sacrifices at 6,7,8
-    [6, 0, 7, 1, 8, 2].each { |m| g.make_move(m) }
+    # O: 0,1,2 (top row), X sacrifices at 3,8,6 (no winning line)
+    [3, 0, 8, 1, 6, 2].each { |m| g.make_move(m) }
     assert g.o_wins?
     assert_equal :o, g.winner
     assert g.over?
@@ -95,7 +95,7 @@ class TestIntegration < Minitest::Test
 
   def test_valid_moves_shrinks_monotonically_throughout_game
     g = TicTacToe::Game.new
-    prev_size = 9
+    prev_size = 10
     until g.over?
       current_size = g.valid_moves.size
       assert current_size < prev_size,

@@ -28,12 +28,12 @@ class TestWinDetection < Minitest::Test
   WINNING_LINES_X.each do |line|
     define_method("test_x_wins_on_line_#{line.join('_')}") do
       g = TicTacToe::Game.new
-      d = dummy_for(line)
-      # Interleave: X plays the winning line, O plays dummy squares
+      o_squares = ((0..8).to_a - line).first(line.size - 1)
+      # Interleave: X plays the winning line, O plays safe squares
       line.each_with_index do |pos, i|
         g.make_move(pos)
         # O plays only for the first two X moves (third X move wins)
-        g.make_move(d + i) if i < line.size - 1
+        g.make_move(o_squares[i]) if i < line.size - 1
       end
       assert_equal "x_wins", g.state
     end
@@ -44,8 +44,11 @@ class TestWinDetection < Minitest::Test
   WINNING_LINES_X.each do |line|
     define_method("test_o_wins_on_line_#{line.join('_')}") do
       g = TicTacToe::Game.new
-      # X sacrifices are positions not in the winning line
-      x_sacrifices = ((0..8).to_a - line).first(3)
+      # X sacrifices: positions not in the winning line that don't form a line
+      candidates = (0..8).to_a - line
+      x_sacrifices = candidates.combination(3).find do |combo|
+        WINNING_LINES_X.none? { |wl| (wl - combo).empty? }
+      end
       # X plays first, then O, then X, then O, then X, then O wins
       line.each_with_index do |o_pos, i|
         g.make_move(x_sacrifices[i]) # X plays safe square

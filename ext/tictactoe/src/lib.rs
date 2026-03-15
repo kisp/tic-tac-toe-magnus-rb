@@ -199,6 +199,7 @@ impl GameInner {
         let player = self.current_player;
 
         let mut best_score = i32::MIN;
+        let mut best_priority = i32::MIN;
         let mut best_pos = moves[0];
 
         for m in moves {
@@ -206,12 +207,24 @@ impl GameInner {
             next.make_move(m).unwrap();
             // After we play `m` it's the opponent's turn → is_max = false.
             let score = next.minimax(player, 0, false);
-            if score > best_score {
+            let priority = Self::position_priority(m);
+            // Prefer better scores; break ties by strategic position (centre > corner > edge)
+            if score > best_score || (score == best_score && priority > best_priority) {
                 best_score = score;
+                best_priority = priority;
                 best_pos = m;
             }
         }
         Some(best_pos)
+    }
+
+    /// Strategic priority for tie-breaking: centre > corners > edges.
+    fn position_priority(pos: usize) -> i32 {
+        match pos {
+            4 => 2,           // centre
+            0 | 2 | 6 | 8 => 1,  // corners
+            _ => 0,           // edges
+        }
     }
 
     // ── Rendering ─────────────────────────────────────────────────────────────

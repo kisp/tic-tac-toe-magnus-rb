@@ -30,13 +30,13 @@ class TestReset < Minitest::Test
   def test_reset_allows_moves_after_win
     play(0, 6, 1, 7, 2)         # X wins — game over
     @game.reset
-    assert_nothing_raised { @game.make_move(4) }
+    @game.make_move(4)           # should not raise
   end
 
   def test_reset_allows_moves_after_draw
     [0, 1, 2, 5, 3, 6, 4, 8, 7].each { |m| @game.make_move(m) }
     @game.reset
-    assert_nothing_raised { @game.make_move(0) }
+    @game.make_move(0)           # should not raise
   end
 
   def test_reset_restores_all_nine_valid_moves
@@ -60,7 +60,7 @@ class TestReset < Minitest::Test
 
   def test_multiple_resets_in_sequence
     3.times do
-      play(0, 1, 2, 3, 4, 5, 6, 7, 8)
+      play(0, 1, 2, 5, 3, 6, 4, 8, 7)  # draw sequence – fills all 9 squares
       @game.reset
       assert_equal "playing", @game.state
       assert_equal 9, @game.valid_moves.size
