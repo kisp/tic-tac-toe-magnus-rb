@@ -1,0 +1,29 @@
+# Nix
+result
+result-*
+.direnv/
+
+# Rust / Cargo
+ext/tictactoe/target/
+# Keep Cargo.lock committed — needed for importCargoLock
+# !ext/tictactoe/Cargo.lock
+
+# Ruby / Bundler
+*.gem
+*.rbc
+.bundle/
+vendor/bundle/
+# gemset.nix and Gemfile.lock are INTENTIONALLY committed (Nix lockfiles)
+# !Gemfile.lock
+# !gemset.nix
+
+# Compiled extension
+lib/tictactoe/tictactoe.{so,bundle,dll}
+tmp/
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store

@@ -1,0 +1,22 @@
+[package]
+name        = "tictactoe"
+version     = "0.1.0"
+edition     = "2021"
+authors     = ["Your Name <you@example.com>"]
+description = "Rust core for the tictactoe Ruby gem"
+license     = "MIT"
+
+[lib]
+# cdylib = dynamic library loadable by Ruby (the .so / .bundle file)
+name       = "tictactoe"
+crate-type = ["cdylib"]
+
+[dependencies]
+# Magnus is the premier safe Rust ↔ Ruby binding library.
+# rb-sys-env is pulled in transitively by rb_sys / rb-sys.
+magnus = { version = "0.7" }
+
+[profile.release]
+# Link-time optimisation gives a measurable speedup for the minimax recursion.
+lto      = true
+opt-level = 3

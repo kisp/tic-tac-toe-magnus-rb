@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+require "tictactoe"
+
+puts "TicTacToe #{TicTacToe::VERSION} — interactive console"
+puts TicTacToe::Game.position_legend
+puts "  g = TicTacToe::Game.new   # create a game"
+puts "  g.make_move(4)            # play centre"
+puts "  g.best_move               # ask the AI"
+puts "  puts g                    # print the board"
+puts ""
+
+require "irb"
+IRB.start(__FILE__)
