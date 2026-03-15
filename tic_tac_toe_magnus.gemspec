@@ -5,8 +5,8 @@ require_relative "lib/tictactoe/version"
 Gem::Specification.new do |spec|
   spec.name    = "tic_tac_toe_magnus"
   spec.version = TicTacToe::VERSION
-  spec.authors = ["Your Name"]
-  spec.email   = ["you@example.com"]
+  spec.authors = ["Kilian Sprotte"]
+  spec.email   = ["kilian.sprotte@gmail.com"]
 
   spec.summary = "Tic Tac Toe engine — Rust core, Ruby API via Magnus"
   spec.description = <<~DESC
@@ -16,13 +16,14 @@ Gem::Specification.new do |spec|
 
     Exists mostly to practice Ruby + Rust gem packaging with Nix.
   DESC
-  spec.homepage = "https://github.com/example/tic-tac-toe-magnus-rb"
+  spec.homepage = "https://github.com/kisp/tic-tac-toe-magnus-rb"
   spec.license  = "MIT"
   spec.required_ruby_version = ">= 3.1.0"
 
-  spec.metadata["homepage_uri"]    = spec.homepage
-  spec.metadata["source_code_uri"] = spec.homepage
-  spec.metadata["changelog_uri"]   = "#{spec.homepage}/blob/main/CHANGELOG.md"
+  spec.metadata["homepage_uri"]        = spec.homepage
+  spec.metadata["source_code_uri"]     = spec.homepage
+  spec.metadata["changelog_uri"]       = "#{spec.homepage}/blob/main/CHANGELOG.md"
+  spec.metadata["rubygems_mfa_required"] = "true"
 
   # All files tracked by git, plus compiled extension
   spec.files = Dir[
@@ -30,7 +31,9 @@ Gem::Specification.new do |spec|
     "ext/**/*.{rb,rs,toml}",
     "*.{md,gemspec,toml}",
     "Gemfile",
-    "Rakefile"
+    "Rakefile",
+    "LICENSE",
+    "Cargo.lock"
   ]
 
   spec.bindir        = "bin"
