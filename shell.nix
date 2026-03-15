@@ -7,17 +7,11 @@
 # With direnv + nix-direnv:
 #   echo "use nix" > .envrc && direnv allow
 #
-# Update the nixpkgs pin:
-#   nix-prefetch-url --unpack \
-#     https://github.com/NixOS/nixpkgs/archive/<rev>.tar.gz
+# nixpkgs is provided via NIX_PATH (set by cachix/install-nix-action in CI,
+# or by your local nix channel).  Override with -I nixpkgs=... if needed.
 
 let
-  # ── Pin nixpkgs for reproducibility ───────────────────────────────────────
-  # Replace <rev> and sha256 after running the nix-prefetch-url command above.
-  pkgs = import (fetchTarball {
-    url    = "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
-    # sha256 = "0000000000000000000000000000000000000000000000000000"; # update me
-  }) {};
+  pkgs = import <nixpkgs> {};
 
   # ── Ruby ──────────────────────────────────────────────────────────────────
   ruby = pkgs.ruby_3_3;
