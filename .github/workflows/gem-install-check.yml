@@ -39,7 +39,7 @@ jobs:
             bash -c "
               set -e
               echo '=== Installing Ruby, Rust and clang ==='
-              pacman -Sy --noconfirm ruby rust clang
+              pacman -Sy --noconfirm ruby rust clang base-devel
 
               echo '=== Ruby version ==='
               ruby --version
