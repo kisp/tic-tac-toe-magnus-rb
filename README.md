@@ -60,6 +60,59 @@ bundle exec rake test
 
 ---
 
+## Try it in the REPL
+
+After compiling the extension, start an IRB session with the gem pre-loaded:
+
+```sh
+bundle exec rake irb
+```
+
+```
+irb(main):001> TicTacToe::Game.new
+=>
+ · │ · │ ·
+───┼───┼───
+ · │ · │ ·
+───┼───┼───
+ · │ · │ ·
+
+  Current player : X
+  State          : playing
+  Valid moves    : 0, 1, 2, 3, 4, 5, 6, 7, 8
+irb(main):002> g = TicTacToe::Game.new
+=>
+ · │ · │ ·
+───┼───┼───
+ · │ · │ ·
+───┼───┼───
+ · │ · │ ·
+
+  Current player : X
+  State          : playing
+  Valid moves    : 0, 1, 2, 3, 4, 5, 6, 7, 8
+irb(main):003> g.current_player
+=> "x"
+irb(main):004> g.valid_moves
+=> [0, 1, 2, 3, 4, 5, 6, 7, 8]
+irb(main):005> g.make_move 3
+=> nil
+irb(main):006> g
+=>
+ · │ · │ ·
+───┼───┼───
+ X │ · │ ·
+───┼───┼───
+ · │ · │ ·
+
+  Current player : O
+  State          : playing
+  Valid moves    : 0, 1, 2, 4, 5, 6, 7, 8
+irb(main):007> exit
+```
+
+---
+
 ## Nix architecture
 
 ```
