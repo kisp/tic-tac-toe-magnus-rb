@@ -11,7 +11,7 @@
 //   6 │ 7 │ 8
 
 use magnus::{
-    define_module, exception, function, method,
+    exception, function, method,
     prelude::*,
     Error, Ruby,
 };
@@ -157,12 +157,12 @@ impl GameInner {
         match self.state() {
             GameState::XWins => {
                 let winner_is_max = maximising_player == Player::X;
-                let base = if winner_is_max { 10 } else { -10 };
+                let base: i32 = if winner_is_max { 10 } else { -10 };
                 base - depth * base.signum()
             }
             GameState::OWins => {
                 let winner_is_max = maximising_player == Player::O;
-                let base = if winner_is_max { 10 } else { -10 };
+                let base: i32 = if winner_is_max { 10 } else { -10 };
                 base - depth * base.signum()
             }
             GameState::Draw => 0,

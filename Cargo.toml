@@ -1,3 +1,8 @@
 [workspace]
 members = ["ext/tictactoe"]
 resolver = "2"
+
+[profile.release]
+# Link-time optimisation gives a measurable speedup for the minimax recursion.
+lto      = true
+opt-level = 3
