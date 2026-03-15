@@ -23,13 +23,16 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
-          bundler-cache: true
+          bundler-cache: false
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
 
       - name: Build gem
         run: bundle exec gem build tic_tac_toe_magnus.gemspec
+
+      - name: Wipe /home/runner/.local/share/gem
+        run: rm -rf /home/runner/.local/share/gem
 
       - name: Install gem locally
         run: gem install ${{ matrix.install-flags }} tic_tac_toe_magnus-*.gem
