@@ -4,14 +4,6 @@ require "rake/extensiontask"
 require "rake/testtask"
 require "rb_sys/extensiontask"
 
-# Suppress "already initialized constant" warnings emitted by the
-# Bundler/RubyGems version mismatch in Ruby 3.3.x.  We prepend -W0 to
-# RUBYOPT so every child Ruby process (extconf.rb, make install …)
-# inherits the suppression.  The explicit -w flag added by TestTask's
-# warning=true option is processed after RUBYOPT and takes precedence,
-# so test-suite warnings are still fully enabled.
-ENV["RUBYOPT"] = "-W0 #{ENV["RUBYOPT"]}".strip
-
 GEMSPEC = Gem::Specification.load("tic_tac_toe_magnus.gemspec")
 
 RbSys::ExtensionTask.new("tictactoe", GEMSPEC) do |ext|
