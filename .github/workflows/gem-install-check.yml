@@ -36,6 +36,7 @@ jobs:
 
       - name: Check require and instantiate game
         run: |
+          cd /tmp
           ruby -e "
             require 'tic_tac_toe_magnus'
             game = TicTacToe::Game.new
