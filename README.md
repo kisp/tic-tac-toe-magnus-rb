@@ -22,6 +22,7 @@ Exists mostly to practice Ruby + Rust gem packaging with Nix.
 
 - [What's inside](#whats-inside)
 - [Getting started](#getting-started)
+  - [Install the gem](#install-the-gem)
   - [With Nix (recommended)](#with-nix-recommended)
   - [Without Nix](#without-nix)
 - [Try it in the REPL](#try-it-in-the-repl)
@@ -49,6 +50,12 @@ Exists mostly to practice Ruby + Rust gem packaging with Nix.
 ---
 
 ## Getting started
+
+### Install the gem
+
+```sh
+gem install tic_tac_toe_magnus
+```
 
 ### With Nix (recommended)
 
