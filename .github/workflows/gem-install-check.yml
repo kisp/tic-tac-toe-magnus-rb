@@ -12,10 +12,6 @@ jobs:
     permissions:
       contents: read
 
-    strategy:
-      matrix:
-        install-flags: ["", "--user-install"]
-
     steps:
       - uses: actions/checkout@v4
 
@@ -31,15 +27,43 @@ jobs:
       - name: Build gem
         run: bundle exec gem build tic_tac_toe_magnus.gemspec
 
-      - name: Install gem locally
-        run: gem install ${{ matrix.install-flags }} tic_tac_toe_magnus-*.gem
+      - name: Resolve gem filename
+        id: gemfile
+        run: echo "name=$(ls tic_tac_toe_magnus-*.gem)" >> $GITHUB_OUTPUT
 
-      - name: Check require and instantiate game
+      - name: Install and test in fresh Docker container
         run: |
-          cd /tmp
-          ruby -e "
-            require 'tic_tac_toe_magnus'
-            game = TicTacToe::Game.new
-            raise \"Expected TicTacToe::Game instance, got #{game.class}\" unless game.is_a?(TicTacToe::Game)
-            puts 'OK: required tic_tac_toe_magnus and instantiated TicTacToe::Game successfully'
-          "
+          docker run --rm \
+            -v "${{ github.workspace }}/${{ steps.gemfile.outputs.name }}:/tmp/${{ steps.gemfile.outputs.name }}" \
+            ruby:3.3 \
+            bash -c "
+              set -e
+              echo '=== Ruby version ==='
+              ruby --version
+
+              echo '=== Installing gem with --user-install ==='
+              gem install --user-install /tmp/${{ steps.gemfile.outputs.name }}
+
+              echo '=== All installed .so files ==='
+              find / -name '*.so' 2>/dev/null | grep tictactoe || echo 'none found'
+
+              echo '=== gem_dir contents ==='
+              ruby -e \"
+                spec = Gem::Specification.find_by_name('tic_tac_toe_magnus')
+                puts 'gem_dir: ' + spec.gem_dir
+              \"
+              GEM_ROOT=\$(ruby -e \"puts Gem::Specification.find_by_name('tic_tac_toe_magnus').gem_dir\")
+              find \"\$GEM_ROOT\" -type f | sort
+
+              echo '=== LOAD_PATH ==='
+              ruby -e \"\\\$LOAD_PATH.each { |p| puts p }\"
+
+              echo '=== Require test (from /tmp, no source tree) ==='
+              cd /tmp
+              ruby -e \"
+                require 'tic_tac_toe_magnus'
+                game = TicTacToe::Game.new
+                raise 'Expected TicTacToe::Game instance, got ' + game.class.to_s unless game.is_a?(TicTacToe::Game)
+                puts 'OK: required tic_tac_toe_magnus and instantiated TicTacToe::Game successfully'
+              \"
+            "
