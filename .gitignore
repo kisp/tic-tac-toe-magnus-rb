@@ -4,9 +4,9 @@ result-*
 .direnv/
 
 # Rust / Cargo
+target/
 ext/tictactoe/target/
-# Keep Cargo.lock committed — needed for importCargoLock
-# !ext/tictactoe/Cargo.lock
+# Cargo.lock is committed for reproducibility
 
 # Ruby / Bundler
 *.gem
