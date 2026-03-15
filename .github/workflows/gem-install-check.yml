@@ -41,6 +41,9 @@ jobs:
               echo '=== Ruby version ==='
               ruby --version
 
+              echo '=== Installing libclang ==='
+              apt-get update -qq && apt-get install -y -qq libclang-dev
+
               echo '=== Installing gem with --user-install ==='
               gem install --user-install /tmp/${{ steps.gemfile.outputs.name }}
 
@@ -48,11 +51,8 @@ jobs:
               find / -name '*.so' 2>/dev/null | grep tictactoe || echo 'none found'
 
               echo '=== gem_dir contents ==='
-              ruby -e \"
-                spec = Gem::Specification.find_by_name('tic_tac_toe_magnus')
-                puts 'gem_dir: ' + spec.gem_dir
-              \"
               GEM_ROOT=\$(ruby -e \"puts Gem::Specification.find_by_name('tic_tac_toe_magnus').gem_dir\")
+              echo \"gem_dir: \$GEM_ROOT\"
               find \"\$GEM_ROOT\" -type f | sort
 
               echo '=== LOAD_PATH ==='
